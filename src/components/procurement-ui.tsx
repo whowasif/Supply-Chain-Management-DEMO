@@ -1,0 +1,33 @@
+import { Search, SlidersHorizontal, Download, ChevronLeft, ChevronRight, Inbox, X } from "lucide-react";
+import { useMemo, useState, type ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { formatBDT, type ProcurementRecord, type StatusTone } from "@/lib/procurement";
+import { cn } from "@/lib/utils";
+
+export function PageHeader({ title, description, action }: { title: string; description: string; action?: ReactNode }) {
+  return <header className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4"><div className="min-w-0"><h1 className="text-2xl font-bold text-foreground">{title}</h1><p className="mt-1 text-sm text-muted-foreground">{description}</p></div>{action && <div className="shrink-0">{action}</div>}</header>;
+}
+
+const toneClass: Record<StatusTone, string> = { success: "bg-success-soft text-success", warning: "bg-warning-soft text-warning-foreground", danger: "bg-danger-soft text-destructive", info: "bg-info-soft text-info", neutral: "bg-muted text-muted-foreground" };
+export function StatusBadge({ children, tone = "neutral" }: { children: ReactNode; tone?: StatusTone }) {
+  return <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold", toneClass[tone])}><span className="size-1.5 rounded-full bg-current" aria-hidden="true" />{children}</span>;
+}
+
+export function MetricCard({ label, value, detail, icon }: { label: string; value: string; detail: string; icon: ReactNode }) {
+  return <article className="rounded-md border border-border bg-card p-5 shadow-card"><div className="flex items-start justify-between"><div><p className="text-sm font-medium text-muted-foreground">{label}</p><p className="mt-2 text-2xl font-bold text-card-foreground">{value}</p></div><div className="grid size-10 place-items-center rounded-md bg-accent text-primary">{icon}</div></div><p className="mt-3 text-xs text-muted-foreground">{detail}</p></article>;
+}
+
+export function RecordsTable({ records, emptyLabel = "records", onOpen }: { records: ProcurementRecord[]; emptyLabel?: string; onOpen?: (item: ProcurementRecord) => void }) {
+  const [query, setQuery] = useState("");
+  const [status, setStatus] = useState("All statuses");
+  const filtered = useMemo(() => records.filter((r) => `${r.id} ${r.title} ${r.department}`.toLowerCase().includes(query.toLowerCase()) && (status === "All statuses" || r.status === status)), [records, query, status]);
+  const statuses = Array.from(new Set(records.map((r) => r.status)));
+  return <div className="overflow-hidden rounded-md border border-border bg-card shadow-card">
+    <div className="flex flex-col gap-3 border-b border-border p-4 sm:flex-row sm:items-center sm:justify-between">
+      <label className="relative block w-full sm:max-w-sm"><span className="sr-only">Search records</span><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search by ID, title or department" className="h-11 w-full rounded-md border border-input bg-background pl-10 pr-9 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring" />{query && <button aria-label="Clear search" onClick={() => setQuery("")} className="absolute right-1 top-0 grid size-11 place-items-center text-muted-foreground"><X className="size-4" /></button>}</label>
+      <div className="flex gap-2"><label className="relative"><span className="sr-only">Filter by status</span><SlidersHorizontal className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><select value={status} onChange={(e) => setStatus(e.target.value)} className="h-11 rounded-md border border-input bg-background pl-9 pr-8 text-sm text-foreground"><option>All statuses</option>{statuses.map((s) => <option key={s}>{s}</option>)}</select></label><Button variant="secondary" size="icon" aria-label="Export records"><Download className="size-4" /></Button></div>
+    </div>
+    {filtered.length ? <><div className="hidden overflow-x-auto md:block"><table className="w-full text-left text-sm"><thead className="bg-muted/70 text-xs uppercase text-muted-foreground"><tr><th className="px-5 py-3 font-semibold">Reference</th><th className="px-5 py-3 font-semibold">Description</th><th className="px-5 py-3 font-semibold">Department / supplier</th><th className="px-5 py-3 font-semibold">Value</th><th className="px-5 py-3 font-semibold">Due / updated</th><th className="px-5 py-3 font-semibold">Status</th></tr></thead><tbody>{filtered.map((item) => <tr key={item.id} onClick={() => onOpen?.(item)} className={cn("border-t border-border", onOpen && "cursor-pointer hover:bg-muted/40")}><td className="px-5 py-4 font-semibold text-primary">{item.id}</td><td className="max-w-sm px-5 py-4 font-medium text-foreground">{item.title}</td><td className="px-5 py-4 text-muted-foreground">{item.department}</td><td className="px-5 py-4 font-medium text-foreground">{formatBDT(item.value)}</td><td className="px-5 py-4 text-muted-foreground">{item.date}</td><td className="px-5 py-4"><StatusBadge tone={item.tone}>{item.status}</StatusBadge></td></tr>)}</tbody></table></div><div className="divide-y divide-border md:hidden">{filtered.map((item) => <button key={item.id} onClick={() => onOpen?.(item)} className="block min-h-11 w-full p-4 text-left"><div className="flex items-center justify-between gap-2"><span className="font-semibold text-primary">{item.id}</span><StatusBadge tone={item.tone}>{item.status}</StatusBadge></div><p className="mt-2 font-medium text-foreground">{item.title}</p><div className="mt-3 flex justify-between text-xs text-muted-foreground"><span>{item.department}</span><span>{formatBDT(item.value)}</span></div></button>)}</div></> : <div className="grid min-h-72 place-items-center p-8 text-center"><div><Inbox className="mx-auto size-10 text-muted-foreground" /><h2 className="mt-3 font-semibold text-foreground">No {emptyLabel} found</h2><p className="mt-1 text-sm text-muted-foreground">Try changing your search or filter.</p></div></div>}
+    <div className="flex items-center justify-between border-t border-border px-4 py-3 text-sm text-muted-foreground"><span>Showing {filtered.length} of {records.length}</span><div className="flex gap-1"><Button variant="ghost" size="icon" aria-label="Previous page" disabled><ChevronLeft className="size-4" /></Button><Button variant="ghost" size="icon" aria-label="Next page" disabled><ChevronRight className="size-4" /></Button></div></div>
+  </div>;
+}

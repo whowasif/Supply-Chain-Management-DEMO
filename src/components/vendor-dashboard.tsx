@@ -1,0 +1,8 @@
+import { Link } from "@tanstack/react-router";
+import { ArrowRight, BadgeCheck, FileSearch, PackageCheck, ReceiptText, Send } from "lucide-react";
+import { MetricCard, PageHeader, RecordsTable } from "@/components/procurement-ui";
+import { tenders } from "@/lib/procurement";
+
+export function VendorDashboard() {
+  return <div className="space-y-7"><PageHeader title="Supplier overview" description="Welcome back, Bengal Medical Supplies Ltd. Your profile is verified." action={<Link to="/vendor/tenders" className="inline-flex min-h-11 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground">Browse tenders <ArrowRight className="size-4" /></Link>} /><section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><MetricCard label="Open opportunities" value="14" detail="5 match your categories" icon={<FileSearch className="size-5" />} /><MetricCard label="Active submissions" value="3" detail="1 clarification pending" icon={<Send className="size-5" />} /><MetricCard label="Active orders" value="4" detail="৳ 82.4 lakh total value" icon={<PackageCheck className="size-5" />} /><MetricCard label="Invoices pending" value="2" detail="Average payment: 18 days" icon={<ReceiptText className="size-5" />} /></section><section><div className="mb-4 flex items-end justify-between"><div><h2 className="text-lg font-bold">Recommended tenders</h2><p className="mt-1 text-sm text-muted-foreground">Based on your verified supply categories.</p></div><BadgeCheck className="size-5 text-success" /></div><RecordsTable records={tenders.slice(0, 4)} emptyLabel="matching tenders" /></section></div>;
+}

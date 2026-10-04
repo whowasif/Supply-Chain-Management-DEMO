@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { ModulePage } from "@/components/module-page";
+export const Route = createFileRoute("/approvals")({ head: () => ({ meta: [{ title: "Approvals — Procuria" }, { name: "description", content: "Review procurement items awaiting authorization." }, { property: "og:title", content: "Approvals — Procuria" }, { property: "og:description", content: "Review procurement items awaiting authorization." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: () => <ModulePage module="requisitions" /> });

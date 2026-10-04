@@ -1,0 +1,3 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { VendorDashboard } from "@/components/vendor-dashboard";
+export const Route = createFileRoute("/vendor/")({ head: () => ({ meta: [{ title: "Supplier Overview — Procuria" }, { name: "description", content: "Supplier tender, bid, order and invoice overview." }, { property: "og:title", content: "Supplier Overview — Procuria" }, { property: "og:description", content: "Supplier tender, bid, order and invoice overview." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }), component: VendorDashboard });
