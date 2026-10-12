@@ -56,7 +56,7 @@ export const formatBDT = (value: number) => new Intl.NumberFormat("en-BD", { sty
 export const navigationGroups = [
   { label: "Workspace", items: [{ label: "Dashboard", to: "/", icon: "LayoutDashboard" }, { label: "Approvals", to: "/approvals", icon: "BadgeCheck", count: 7 }] },
   { label: "Procurement", items: [{ label: "Requisitions", to: "/requisitions", icon: "ClipboardList" }, { label: "Plans", to: "/plans", icon: "CalendarRange" }, { label: "Market surveys", to: "/surveys", icon: "ChartNoAxesCombined" }, { label: "Tenders", to: "/tenders", icon: "FileSearch" }, { label: "Evaluations", to: "/evaluations", icon: "Scale" }] },
-  { label: "Supply chain", items: [{ label: "Suppliers", to: "/suppliers", icon: "Building2" }, { label: "Purchase orders", to: "/purchase-orders", icon: "ShoppingCart" }, { label: "Contracts", to: "/contracts", icon: "FileSignature" }, { label: "Receiving", to: "/receiving", icon: "PackageCheck" }, { label: "Inventory", to: "/inventory", icon: "Warehouse" }, { label: "Invoices & payments", to: "/payments", icon: "ReceiptText" }] },
+  { label: "Supply chain", items: [{ label: "Suppliers", to: "/suppliers", icon: "Building2" }, { label: "Purchase orders", to: "/purchase-orders", icon: "ShoppingCart" }, { label: "Contracts", to: "/contracts", icon: "FileSignature" }, { label: "Receiving", to: "/receiving", icon: "PackageCheck" }, { label: "Inventory", to: "/inventory", icon: "Warehouse" }, { label: "Store issues", to: "/issues", icon: "ArrowRightLeft" }, { label: "Assets", to: "/assets", icon: "Laptop" }, { label: "Invoices & payments", to: "/payments", icon: "ReceiptText" }] },
   { label: "Oversight", items: [{ label: "Reports", to: "/reports", icon: "BarChart3" }, { label: "Audit trail", to: "/audit", icon: "ScrollText" }] },
 ] as const;
 
@@ -70,8 +70,10 @@ export const moduleDefinitions = {
   "purchase-orders": { title: "Purchase orders", description: "Track commitments, delivery schedules and order fulfilment.", singular: "purchase order", action: "Create PO" },
   contracts: { title: "Contracts", description: "Manage contract values, milestones, deliverables and renewals.", singular: "contract", action: "New contract" },
   receiving: { title: "Delivery & receiving", description: "Record deliveries, quality inspections and goods received notes.", singular: "delivery", action: "Record receipt" },
-  inventory: { title: "Inventory", description: "Monitor stock levels, movements, issues and warehouse locations.", singular: "stock item", action: "New movement" },
+  inventory: { title: "Inventory", description: "On-hand stock by store, batch, expiry and project.", singular: "stock item", action: "New movement" },
+  issues: { title: "Store issues", description: "Issue a batch to a ward or office. The earliest expiry with stock is suggested.", singular: "issue", action: "New issue" },
+  assets: { title: "Assets", description: "Equipment and vehicles created from goods receipts, with location, custodian and condition.", singular: "asset", action: "Update asset" },
   payments: { title: "Invoices & payments", description: "Verify supplier invoices against purchase orders and receipts.", singular: "invoice", action: "Record invoice" },
-  reports: { title: "Reports & analytics", description: "Analyze expenditure, cycle time, savings and budget utilization.", singular: "report", action: "Export report" },
+  reports: { title: "Reports", description: "Purchase register, stock ledger, items expiring within 90 days, pending deliveries, assets by location, and committed spend.", singular: "report", action: "Export" },
   audit: { title: "Audit trail", description: "Review a complete history of procurement actions and changes.", singular: "event", action: "Export log" },
 };

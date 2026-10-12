@@ -11,10 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApprovalsRouteImport } from './routes/approvals'
+import { Route as AssetsRouteImport } from './routes/assets'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as ContractsRouteImport } from './routes/contracts'
 import { Route as EvaluationsRouteImport } from './routes/evaluations'
 import { Route as InventoryRouteImport } from './routes/inventory'
+import { Route as IssuesRouteImport } from './routes/issues'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as PaymentsRouteImport } from './routes/payments'
 import { Route as PlansRouteImport } from './routes/plans'
@@ -26,7 +28,12 @@ import { Route as SuppliersRouteImport } from './routes/suppliers'
 import { Route as SurveysRouteImport } from './routes/surveys'
 import { Route as TendersRouteImport } from './routes/tenders'
 import { Route as VendorIndexRouteImport } from './routes/vendor/index'
+import { Route as VendorAwardsRouteImport } from './routes/vendor/awards'
 import { Route as VendorBidsRouteImport } from './routes/vendor/bids'
+import { Route as VendorCompanyRouteImport } from './routes/vendor/company'
+import { Route as VendorDeliveriesRouteImport } from './routes/vendor/deliveries'
+import { Route as VendorInvoicesRouteImport } from './routes/vendor/invoices'
+import { Route as VendorNoticesRouteImport } from './routes/vendor/notices'
 import { Route as VendorOrdersRouteImport } from './routes/vendor/orders'
 import { Route as VendorTendersRouteImport } from './routes/vendor/tenders'
 
@@ -38,6 +45,11 @@ const IndexRoute = IndexRouteImport.update({
 const ApprovalsRoute = ApprovalsRouteImport.update({
   id: '/approvals',
   path: '/approvals',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssetsRoute = AssetsRouteImport.update({
+  id: '/assets',
+  path: '/assets',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuditRoute = AuditRouteImport.update({
@@ -58,6 +70,11 @@ const EvaluationsRoute = EvaluationsRouteImport.update({
 const InventoryRoute = InventoryRouteImport.update({
   id: '/inventory',
   path: '/inventory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IssuesRoute = IssuesRouteImport.update({
+  id: '/issues',
+  path: '/issues',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsRoute = NotificationsRouteImport.update({
@@ -115,9 +132,34 @@ const VendorIndexRoute = VendorIndexRouteImport.update({
   path: '/vendor/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VendorAwardsRoute = VendorAwardsRouteImport.update({
+  id: '/vendor/awards',
+  path: '/vendor/awards',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VendorBidsRoute = VendorBidsRouteImport.update({
   id: '/vendor/bids',
   path: '/vendor/bids',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorCompanyRoute = VendorCompanyRouteImport.update({
+  id: '/vendor/company',
+  path: '/vendor/company',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorDeliveriesRoute = VendorDeliveriesRouteImport.update({
+  id: '/vendor/deliveries',
+  path: '/vendor/deliveries',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorInvoicesRoute = VendorInvoicesRouteImport.update({
+  id: '/vendor/invoices',
+  path: '/vendor/invoices',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorNoticesRoute = VendorNoticesRouteImport.update({
+  id: '/vendor/notices',
+  path: '/vendor/notices',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VendorOrdersRoute = VendorOrdersRouteImport.update({
@@ -134,10 +176,12 @@ const VendorTendersRoute = VendorTendersRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/approvals': typeof ApprovalsRoute
+  '/assets': typeof AssetsRoute
   '/audit': typeof AuditRoute
   '/contracts': typeof ContractsRoute
   '/evaluations': typeof EvaluationsRoute
   '/inventory': typeof InventoryRoute
+  '/issues': typeof IssuesRoute
   '/notifications': typeof NotificationsRoute
   '/payments': typeof PaymentsRoute
   '/plans': typeof PlansRoute
@@ -148,7 +192,12 @@ export interface FileRoutesByFullPath {
   '/suppliers': typeof SuppliersRoute
   '/surveys': typeof SurveysRoute
   '/tenders': typeof TendersRoute
+  '/vendor/awards': typeof VendorAwardsRoute
   '/vendor/bids': typeof VendorBidsRoute
+  '/vendor/company': typeof VendorCompanyRoute
+  '/vendor/deliveries': typeof VendorDeliveriesRoute
+  '/vendor/invoices': typeof VendorInvoicesRoute
+  '/vendor/notices': typeof VendorNoticesRoute
   '/vendor/orders': typeof VendorOrdersRoute
   '/vendor/tenders': typeof VendorTendersRoute
   '/vendor/': typeof VendorIndexRoute
@@ -156,10 +205,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/approvals': typeof ApprovalsRoute
+  '/assets': typeof AssetsRoute
   '/audit': typeof AuditRoute
   '/contracts': typeof ContractsRoute
   '/evaluations': typeof EvaluationsRoute
   '/inventory': typeof InventoryRoute
+  '/issues': typeof IssuesRoute
   '/notifications': typeof NotificationsRoute
   '/payments': typeof PaymentsRoute
   '/plans': typeof PlansRoute
@@ -170,7 +221,12 @@ export interface FileRoutesByTo {
   '/suppliers': typeof SuppliersRoute
   '/surveys': typeof SurveysRoute
   '/tenders': typeof TendersRoute
+  '/vendor/awards': typeof VendorAwardsRoute
   '/vendor/bids': typeof VendorBidsRoute
+  '/vendor/company': typeof VendorCompanyRoute
+  '/vendor/deliveries': typeof VendorDeliveriesRoute
+  '/vendor/invoices': typeof VendorInvoicesRoute
+  '/vendor/notices': typeof VendorNoticesRoute
   '/vendor/orders': typeof VendorOrdersRoute
   '/vendor/tenders': typeof VendorTendersRoute
   '/vendor': typeof VendorIndexRoute
@@ -179,10 +235,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/approvals': typeof ApprovalsRoute
+  '/assets': typeof AssetsRoute
   '/audit': typeof AuditRoute
   '/contracts': typeof ContractsRoute
   '/evaluations': typeof EvaluationsRoute
   '/inventory': typeof InventoryRoute
+  '/issues': typeof IssuesRoute
   '/notifications': typeof NotificationsRoute
   '/payments': typeof PaymentsRoute
   '/plans': typeof PlansRoute
@@ -193,7 +251,12 @@ export interface FileRoutesById {
   '/suppliers': typeof SuppliersRoute
   '/surveys': typeof SurveysRoute
   '/tenders': typeof TendersRoute
+  '/vendor/awards': typeof VendorAwardsRoute
   '/vendor/bids': typeof VendorBidsRoute
+  '/vendor/company': typeof VendorCompanyRoute
+  '/vendor/deliveries': typeof VendorDeliveriesRoute
+  '/vendor/invoices': typeof VendorInvoicesRoute
+  '/vendor/notices': typeof VendorNoticesRoute
   '/vendor/orders': typeof VendorOrdersRoute
   '/vendor/tenders': typeof VendorTendersRoute
   '/vendor/': typeof VendorIndexRoute
@@ -203,10 +266,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/approvals'
+    | '/assets'
     | '/audit'
     | '/contracts'
     | '/evaluations'
     | '/inventory'
+    | '/issues'
     | '/notifications'
     | '/payments'
     | '/plans'
@@ -217,7 +282,12 @@ export interface FileRouteTypes {
     | '/suppliers'
     | '/surveys'
     | '/tenders'
+    | '/vendor/awards'
     | '/vendor/bids'
+    | '/vendor/company'
+    | '/vendor/deliveries'
+    | '/vendor/invoices'
+    | '/vendor/notices'
     | '/vendor/orders'
     | '/vendor/tenders'
     | '/vendor/'
@@ -225,10 +295,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/approvals'
+    | '/assets'
     | '/audit'
     | '/contracts'
     | '/evaluations'
     | '/inventory'
+    | '/issues'
     | '/notifications'
     | '/payments'
     | '/plans'
@@ -239,7 +311,12 @@ export interface FileRouteTypes {
     | '/suppliers'
     | '/surveys'
     | '/tenders'
+    | '/vendor/awards'
     | '/vendor/bids'
+    | '/vendor/company'
+    | '/vendor/deliveries'
+    | '/vendor/invoices'
+    | '/vendor/notices'
     | '/vendor/orders'
     | '/vendor/tenders'
     | '/vendor'
@@ -247,10 +324,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/approvals'
+    | '/assets'
     | '/audit'
     | '/contracts'
     | '/evaluations'
     | '/inventory'
+    | '/issues'
     | '/notifications'
     | '/payments'
     | '/plans'
@@ -261,7 +340,12 @@ export interface FileRouteTypes {
     | '/suppliers'
     | '/surveys'
     | '/tenders'
+    | '/vendor/awards'
     | '/vendor/bids'
+    | '/vendor/company'
+    | '/vendor/deliveries'
+    | '/vendor/invoices'
+    | '/vendor/notices'
     | '/vendor/orders'
     | '/vendor/tenders'
     | '/vendor/'
@@ -270,10 +354,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApprovalsRoute: typeof ApprovalsRoute
+  AssetsRoute: typeof AssetsRoute
   AuditRoute: typeof AuditRoute
   ContractsRoute: typeof ContractsRoute
   EvaluationsRoute: typeof EvaluationsRoute
   InventoryRoute: typeof InventoryRoute
+  IssuesRoute: typeof IssuesRoute
   NotificationsRoute: typeof NotificationsRoute
   PaymentsRoute: typeof PaymentsRoute
   PlansRoute: typeof PlansRoute
@@ -284,7 +370,12 @@ export interface RootRouteChildren {
   SuppliersRoute: typeof SuppliersRoute
   SurveysRoute: typeof SurveysRoute
   TendersRoute: typeof TendersRoute
+  VendorAwardsRoute: typeof VendorAwardsRoute
   VendorBidsRoute: typeof VendorBidsRoute
+  VendorCompanyRoute: typeof VendorCompanyRoute
+  VendorDeliveriesRoute: typeof VendorDeliveriesRoute
+  VendorInvoicesRoute: typeof VendorInvoicesRoute
+  VendorNoticesRoute: typeof VendorNoticesRoute
   VendorOrdersRoute: typeof VendorOrdersRoute
   VendorTendersRoute: typeof VendorTendersRoute
   VendorIndexRoute: typeof VendorIndexRoute
@@ -304,6 +395,13 @@ declare module '@tanstack/react-router' {
       path: '/approvals'
       fullPath: '/approvals'
       preLoaderRoute: typeof ApprovalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assets': {
+      id: '/assets'
+      path: '/assets'
+      fullPath: '/assets'
+      preLoaderRoute: typeof AssetsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/audit': {
@@ -332,6 +430,13 @@ declare module '@tanstack/react-router' {
       path: '/inventory'
       fullPath: '/inventory'
       preLoaderRoute: typeof InventoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/issues': {
+      id: '/issues'
+      path: '/issues'
+      fullPath: '/issues'
+      preLoaderRoute: typeof IssuesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notifications': {
@@ -411,11 +516,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VendorIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/vendor/awards': {
+      id: '/vendor/awards'
+      path: '/vendor/awards'
+      fullPath: '/vendor/awards'
+      preLoaderRoute: typeof VendorAwardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vendor/bids': {
       id: '/vendor/bids'
       path: '/vendor/bids'
       fullPath: '/vendor/bids'
       preLoaderRoute: typeof VendorBidsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendor/company': {
+      id: '/vendor/company'
+      path: '/vendor/company'
+      fullPath: '/vendor/company'
+      preLoaderRoute: typeof VendorCompanyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendor/deliveries': {
+      id: '/vendor/deliveries'
+      path: '/vendor/deliveries'
+      fullPath: '/vendor/deliveries'
+      preLoaderRoute: typeof VendorDeliveriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendor/invoices': {
+      id: '/vendor/invoices'
+      path: '/vendor/invoices'
+      fullPath: '/vendor/invoices'
+      preLoaderRoute: typeof VendorInvoicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendor/notices': {
+      id: '/vendor/notices'
+      path: '/vendor/notices'
+      fullPath: '/vendor/notices'
+      preLoaderRoute: typeof VendorNoticesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/vendor/orders': {
@@ -438,10 +578,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApprovalsRoute: ApprovalsRoute,
+  AssetsRoute: AssetsRoute,
   AuditRoute: AuditRoute,
   ContractsRoute: ContractsRoute,
   EvaluationsRoute: EvaluationsRoute,
   InventoryRoute: InventoryRoute,
+  IssuesRoute: IssuesRoute,
   NotificationsRoute: NotificationsRoute,
   PaymentsRoute: PaymentsRoute,
   PlansRoute: PlansRoute,
@@ -452,7 +594,12 @@ const rootRouteChildren: RootRouteChildren = {
   SuppliersRoute: SuppliersRoute,
   SurveysRoute: SurveysRoute,
   TendersRoute: TendersRoute,
+  VendorAwardsRoute: VendorAwardsRoute,
   VendorBidsRoute: VendorBidsRoute,
+  VendorCompanyRoute: VendorCompanyRoute,
+  VendorDeliveriesRoute: VendorDeliveriesRoute,
+  VendorInvoicesRoute: VendorInvoicesRoute,
+  VendorNoticesRoute: VendorNoticesRoute,
   VendorOrdersRoute: VendorOrdersRoute,
   VendorTendersRoute: VendorTendersRoute,
   VendorIndexRoute: VendorIndexRoute,

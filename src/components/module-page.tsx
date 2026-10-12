@@ -1,14 +1,74 @@
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DocumentDialog, type DocumentKind } from "@/components/forms/document-dialog";
 import { PageHeader, RecordsTable } from "@/components/procurement-ui";
-import { moduleDefinitions, moduleRecords, type ProcurementRecord } from "@/lib/procurement";
+import { formatBDT, formatDisplayDate, recordsFor, stockPositions } from "@/lib/domain";
+import { moduleDefinitions, type ProcurementRecord } from "@/lib/procurement";
+import { useProcurement } from "@/lib/store";
+
+const creatable = new Set<string>(["requisitions", "plans", "surveys", "tenders", "evaluations", "suppliers", "purchase-orders", "contracts", "receiving", "inventory", "payments"]);
 
 export function ModulePage({ module }: { module: keyof typeof moduleDefinitions }) {
+  const { state, focus, setFocus } = useProcurement();
   const definition = moduleDefinitions[module];
-  const records = moduleRecords[module] ?? [];
-  const [selected, setSelected] = useState<ProcurementRecord>();
-  const [showCreate, setShowCreate] = useState(false);
+  const records = useMemo(() => recordsFor(state, module), [state, module]);
+  const [documentId, setDocumentId] = useState<string | undefined>();
+  const [open, setOpen] = useState(false);
+  const [detail, setDetail] = useState<ProcurementRecord>();
+  const stock = module === "inventory" ? stockPositions(state) : [];
+
+  useEffect(() => {
+    if (focus?.module !== module) return;
+    if (creatable.has(module)) {
+      setDocumentId(focus.id);
+      setOpen(true);
+    } else {
+      const match = records.find((item) => item.id === focus.id);
+      if (match) setDetail(match);
+    }
+    setFocus(null);
+  }, [focus, module, records, setFocus]);
+
   if (!definition) return null;
-  return <div className="space-y-6"><PageHeader title={definition.title} description={definition.description} action={<Button onClick={() => setShowCreate(true)}><Plus className="size-4" />{definition.action}</Button>} /><RecordsTable records={records} emptyLabel={definition.title.toLowerCase()} onOpen={setSelected} />{(selected || showCreate) && <div className="fixed inset-0 z-50 grid place-items-end bg-overlay p-0 sm:place-items-center sm:p-4" role="presentation" onMouseDown={(e) => e.target === e.currentTarget && (setSelected(undefined), setShowCreate(false))}><section role="dialog" aria-modal="true" aria-labelledby="modal-title" className="max-h-[90dvh] w-full overflow-y-auto rounded-t-lg bg-card p-6 shadow-dialog sm:max-w-lg sm:rounded-lg"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-bold uppercase text-primary">{selected?.id ?? `New ${definition.singular}`}</p><h2 id="modal-title" className="mt-1 text-xl font-bold text-foreground">{selected?.title ?? definition.action}</h2></div><Button variant="ghost" size="icon" aria-label="Close dialog" onClick={() => { setSelected(undefined); setShowCreate(false); }}><span aria-hidden="true">×</span></Button></div>{selected ? <dl className="mt-6 grid grid-cols-2 gap-5 text-sm"><div><dt className="text-muted-foreground">Department</dt><dd className="mt-1 font-semibold">{selected.department}</dd></div><div><dt className="text-muted-foreground">Status</dt><dd className="mt-1 font-semibold">{selected.status}</dd></div><div><dt className="text-muted-foreground">Responsible</dt><dd className="mt-1 font-semibold">{selected.owner}</dd></div><div><dt className="text-muted-foreground">Updated / due</dt><dd className="mt-1 font-semibold">{selected.date}</dd></div></dl> : <form className="mt-6 space-y-4" onSubmit={(e) => { e.preventDefault(); setShowCreate(false); }}><label className="block text-sm font-semibold">Title <span className="text-destructive">*</span><input required className="mt-2 h-11 w-full rounded-md border border-input bg-background px-3 font-normal outline-none focus:ring-2 focus:ring-ring" /></label><label className="block text-sm font-semibold">Department <span className="text-destructive">*</span><select required className="mt-2 h-11 w-full rounded-md border border-input bg-background px-3 font-normal"><option>Humanitarian Response</option><option>Health Programme</option><option>Operations</option></select></label><label className="block text-sm font-semibold">Estimated value (BDT)<input type="number" min="0" className="mt-2 h-11 w-full rounded-md border border-input bg-background px-3 font-normal outline-none focus:ring-2 focus:ring-ring" /></label><div className="flex justify-end gap-2 pt-2"><Button type="button" variant="secondary" onClick={() => setShowCreate(false)}>Cancel</Button><Button type="submit">Save draft</Button></div></form>}</section></div>}</div>;
+  const kind = module as DocumentKind;
+  return (
+    <div className="space-y-6">
+      <PageHeader title={definition.title} description={definition.description} action={creatable.has(module) ? <Button onClick={() => { setDocumentId(undefined); setOpen(true); }}><Plus className="size-4" />{definition.action}</Button> : undefined} />
+      {module === "inventory" && stock.length > 0 && (
+        <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Stock on hand">
+          {stock.map((item) => (
+            <article key={item.id} className="rounded-md border border-border bg-card p-4 shadow-card">
+              <p className="text-sm font-semibold">{item.item}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{item.storeName} · batch {item.batch || "—"} · expiry {item.expiry ? formatDisplayDate(item.expiry) : "—"}</p>
+              <p className="mt-2 text-xl font-bold">{item.onHand} on hand</p>
+            </article>
+          ))}
+        </section>
+      )}
+      {module === "reports" && <p className="text-sm text-muted-foreground">Committed purchase-order value across departments is {formatBDT(records.reduce((sum, item) => sum + item.value, 0))}.</p>}
+      <RecordsTable records={records} emptyLabel={definition.title.toLowerCase()} onOpen={(item) => {
+        if (creatable.has(module)) { setDocumentId(item.id); setOpen(true); }
+        else setDetail(item);
+      }} />
+      {open && creatable.has(module) && <DocumentDialog kind={kind} documentId={documentId} open={open} onOpenChange={setOpen} />}
+      <Dialog open={!!detail} onOpenChange={(next) => { if (!next) setDetail(undefined); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{detail?.id}</DialogTitle>
+            <DialogDescription>{detail?.title}</DialogDescription>
+          </DialogHeader>
+          {detail && module === "audit" && (
+            <dl className="grid gap-3 text-sm">
+              <div><dt className="text-muted-foreground">When</dt><dd className="font-semibold">{formatDisplayDate(state.audit.find((item) => item.id === detail.id)?.at ?? detail.date)}</dd></div>
+              <div><dt className="text-muted-foreground">Actor</dt><dd className="font-semibold">{detail.owner}</dd></div>
+              <div><dt className="text-muted-foreground">Action</dt><dd className="font-semibold">{state.audit.find((item) => item.id === detail.id)?.action} · {state.audit.find((item) => item.id === detail.id)?.fromStatus} to {detail.status}</dd></div>
+            </dl>
+          )}
+          {detail && module === "reports" && <p className="text-sm">Committed value for {detail.department} is {formatBDT(detail.value)}. Export the table to take this register offline.</p>}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
 }

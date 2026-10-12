@@ -176,3 +176,9 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
+
+@media print {
+  body * { visibility: hidden; }
+  .bangla-sheet, .bangla-sheet * { visibility: visible; }
+  .bangla-sheet { position: absolute; inset: 0; width: 100%; }
+}
